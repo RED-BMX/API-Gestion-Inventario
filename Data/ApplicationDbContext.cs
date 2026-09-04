@@ -90,16 +90,26 @@ public class ApplicationDbContext : DbContext
             .WithMany(r => r.Users)
             .HasForeignKey(u => u.RoleId)
             .OnDelete(DeleteBehavior.Restrict);
-
+        
+        // Configuración de Role
+        modelBuilder.Entity<Role>()
+            .Property(r => r.Name)
+            .IsRequired()
+            .HasMaxLength(50);
+        
+        modelBuilder.Entity<Role>()
+            .HasIndex(r => r.Name)
+            .IsUnique();
+        
         // Configuración de nombres únicos
         modelBuilder.Entity<Category>()
             .HasIndex(c => c.Name)
             .IsUnique();
-
+        
         modelBuilder.Entity<User>()
             .HasIndex(u => u.Username)
             .IsUnique();
-
+        
         modelBuilder.Entity<User>()
             .HasIndex(u => u.Email)
             .IsUnique();
