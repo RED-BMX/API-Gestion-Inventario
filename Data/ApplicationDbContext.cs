@@ -25,6 +25,38 @@ public class ApplicationDbContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
 
+        // Configuración de Product
+        modelBuilder.Entity<Product>()
+            .Property(p => p.Name)
+            .IsRequired()
+            .HasMaxLength(150);
+        
+        modelBuilder.Entity<Product>()
+            .Property(p => p.Description)
+            .HasMaxLength(500);
+        
+        modelBuilder.Entity<Product>()
+            .Property(p => p.Price)
+            .HasPrecision(10, 2);
+        
+        modelBuilder.Entity<Product>()
+            .ToTable(t => t.HasCheckConstraint(
+                "CK_Product_Price",
+                "\"Price\" >= 0"));
+        
+        modelBuilder.Entity<Product>()
+            .ToTable(t => t.HasCheckConstraint(
+                "CK_Product_Stock",
+                "\"Stock\" >= 0"));
+        
+        modelBuilder.Entity<Product>()
+            .ToTable(t => t.HasCheckConstraint(
+                "CK_Product_MinimumStock",
+                "\"MinimumStock\" >= 0"));
+        
+        modelBuilder.Entity<Product>()
+            .HasIndex(p => p.CategoryId);
+
         // Category -> Products
         modelBuilder.Entity<Product>()
             .HasOne(p => p.Category)
