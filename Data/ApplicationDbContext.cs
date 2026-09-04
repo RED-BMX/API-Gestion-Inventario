@@ -31,6 +31,15 @@ public class ApplicationDbContext : DbContext
             .IsRequired()
             .HasMaxLength(150);
         
+        modelBuilder.Entity<Category>()
+            .Property(c => c.Name)
+            .IsRequired()
+            .HasMaxLength(100);
+        
+        modelBuilder.Entity<Category>()
+            .Property(c => c.Description)
+            .HasMaxLength(300);
+        
         modelBuilder.Entity<Product>()
             .Property(p => p.Description)
             .HasMaxLength(500);
