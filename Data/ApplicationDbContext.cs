@@ -113,6 +113,26 @@ public class ApplicationDbContext : DbContext
         modelBuilder.Entity<User>()
             .HasIndex(u => u.Email)
             .IsUnique();
+
+        // Configuración de User
+        modelBuilder.Entity<User>()
+            .Property(u => u.Username)
+            .IsRequired()
+            .HasMaxLength(50);
+        
+        modelBuilder.Entity<User>()
+            .Property(u => u.Email)
+            .IsRequired()
+            .HasMaxLength(254);
+        
+        modelBuilder.Entity<User>()
+            .Property(u => u.PasswordHash)
+            .IsRequired()
+            .HasMaxLength(500);
+        
+        modelBuilder.Entity<User>()
+            .Property(u => u.CreatedAt)
+            .IsRequired();
         
         // Configuración de InventoryMovement
         modelBuilder.Entity<InventoryMovement>()
