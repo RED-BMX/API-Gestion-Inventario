@@ -103,5 +103,19 @@ public class ApplicationDbContext : DbContext
         modelBuilder.Entity<User>()
             .HasIndex(u => u.Email)
             .IsUnique();
+        
+        // Configuración de InventoryMovement
+        modelBuilder.Entity<InventoryMovement>()
+            .Property(m => m.Description)
+            .HasMaxLength(500);
+        
+        modelBuilder.Entity<InventoryMovement>()
+            .Property(m => m.Date)
+            .IsRequired();
+        
+        modelBuilder.Entity<InventoryMovement>()
+            .ToTable(t => t.HasCheckConstraint(
+                "CK_InventoryMovement_Quantity",
+                "\"Quantity\" > 0"));
     }
 }
