@@ -21,7 +21,7 @@ public class Product
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 
     // Relación: muchos productos pertenecen a una categoría
-    public Category Category { get; set; } = null!;
+    public Category? Category { get; set; }
 
     // Relación: un producto puede tener muchos movimientos
     public ICollection<InventoryMovement> InventoryMovements { get; set; }

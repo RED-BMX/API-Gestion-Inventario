@@ -5,16 +5,34 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using API_Gestion_Inventario.Services;
 using API_Gestion_Inventario.Services.Interfaces;
+using API_Gestion_Inventario.Repositories;
+using API_Gestion_Inventario.Repositories.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
+
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(
+            new System.Text.Json.Serialization.JsonStringEnumConverter());
+    });
 
 builder.Services.AddScoped<IPasswordService, PasswordService>();
 
 builder.Services.AddScoped<IJwtService, JwtService>();
 
 builder.Services.AddScoped<IAuthService, AuthService>();
+
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
+
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<IProductService, ProductService>();
+
+builder.Services.AddScoped<IInventoryMovementRepository, InventoryMovementRepository>();
+builder.Services.AddScoped<IInventoryMovementService, InventoryMovementService>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>

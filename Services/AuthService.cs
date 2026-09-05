@@ -42,13 +42,13 @@ public class AuthService : IAuthService
                 "El correo electrónico ya está registrado.");
         }
     
-        var roleExists = await _context.Roles
-            .AnyAsync(r => r.Id == request.RoleId);
-    
-        if (!roleExists)
+        var userRole = await _context.Roles
+            .FirstOrDefaultAsync(r => r.Name == "User");
+        
+        if (userRole is null)
         {
             throw new InvalidOperationException(
-                "El rol especificado no existe.");
+                "El rol User no está configurado.");
         }
     
         var user = new User
@@ -56,17 +56,14 @@ public class AuthService : IAuthService
             Username = request.Username,
             Email = request.Email,
             PasswordHash = _passwordService.HashPassword(request.Password),
-            RoleId = request.RoleId
+            RoleId = userRole.Id
         };
     
         _context.Users.Add(user);
     
         await _context.SaveChangesAsync();
     
-        var role = await _context.Roles
-            .FirstAsync(r => r.Id == user.RoleId);
-    
-        user.Role = role;
+        user.Role = userRole;
         
         var token = _jwtService.GenerateToken(user);
         
@@ -76,7 +73,7 @@ public class AuthService : IAuthService
             UserId = user.Id,
             Username = user.Username,
             Email = user.Email,
-            Role = role.Name
+            Role = userRole.Name
         };
     }
 
