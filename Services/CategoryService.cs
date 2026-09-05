@@ -1,3 +1,4 @@
+using API_Gestion_Inventario.DTOs.Categories;
 using API_Gestion_Inventario.Models;
 using API_Gestion_Inventario.Repositories.Interfaces;
 using API_Gestion_Inventario.Services.Interfaces;
@@ -13,20 +14,27 @@ public class CategoryService : ICategoryService
         _categoryRepository = categoryRepository;
     }
 
-    public async Task<IEnumerable<Category>> GetAllAsync()
+    public async Task<IEnumerable<CategoryResponse>> GetAllAsync()
     {
-        return await _categoryRepository.GetAllAsync();
+        var categories = await _categoryRepository.GetAllAsync();
+
+        return categories.Select(MapToResponse);
     }
 
-    public async Task<Category?> GetByIdAsync(int id)
+    public async Task<CategoryResponse?> GetByIdAsync(int id)
     {
-        return await _categoryRepository.GetByIdAsync(id);
+        var category = await _categoryRepository.GetByIdAsync(id);
+
+        return category is null
+            ? null
+            : MapToResponse(category);
     }
 
-    public async Task<Category> CreateAsync(Category category)
+    public async Task<CategoryResponse> CreateAsync(
+        CreateCategoryRequest request)
     {
         var existingCategory = await _categoryRepository
-            .GetByNameAsync(category.Name);
+            .GetByNameAsync(request.Name);
 
         if (existingCategory is not null)
         {
@@ -34,14 +42,20 @@ public class CategoryService : ICategoryService
                 "Ya existe una categoría con ese nombre.");
         }
 
+        var category = new Category
+        {
+            Name = request.Name,
+            Description = request.Description
+        };
+
         await _categoryRepository.AddAsync(category);
 
-        return category;
+        return MapToResponse(category);
     }
 
-    public async Task<Category?> UpdateAsync(
+    public async Task<CategoryResponse?> UpdateAsync(
         int id,
-        Category category)
+        UpdateCategoryRequest request)
     {
         var existingCategory = await _categoryRepository
             .GetByIdAsync(id);
@@ -52,7 +66,7 @@ public class CategoryService : ICategoryService
         }
 
         var categoryWithSameName = await _categoryRepository
-            .GetByNameAsync(category.Name);
+            .GetByNameAsync(request.Name);
 
         if (categoryWithSameName is not null &&
             categoryWithSameName.Id != id)
@@ -61,12 +75,12 @@ public class CategoryService : ICategoryService
                 "Ya existe una categoría con ese nombre.");
         }
 
-        existingCategory.Name = category.Name;
-        existingCategory.Description = category.Description;
+        existingCategory.Name = request.Name;
+        existingCategory.Description = request.Description;
 
         await _categoryRepository.UpdateAsync(existingCategory);
 
-        return existingCategory;
+        return MapToResponse(existingCategory);
     }
 
     public async Task<bool> DeleteAsync(int id)
@@ -81,5 +95,16 @@ public class CategoryService : ICategoryService
         await _categoryRepository.DeleteAsync(category);
 
         return true;
+    }
+
+    private static CategoryResponse MapToResponse(Category category)
+    {
+        return new CategoryResponse
+        {
+            Id = category.Id,
+            Name = category.Name,
+            Description = category.Description,
+            CreatedAt = category.CreatedAt
+        };
     }
 }

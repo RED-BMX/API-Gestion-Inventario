@@ -1,16 +1,18 @@
-using API_Gestion_Inventario.Models;
+using API_Gestion_Inventario.DTOs.Categories;
 
 namespace API_Gestion_Inventario.Services.Interfaces;
 
 public interface ICategoryService
 {
-    Task<IEnumerable<Category>> GetAllAsync();
+    Task<IEnumerable<CategoryResponse>> GetAllAsync();
 
-    Task<Category?> GetByIdAsync(int id);
+    Task<CategoryResponse?> GetByIdAsync(int id);
 
-    Task<Category> CreateAsync(Category category);
+    Task<CategoryResponse> CreateAsync(CreateCategoryRequest request);
 
-    Task<Category?> UpdateAsync(int id, Category category);
+    Task<CategoryResponse?> UpdateAsync(
+        int id,
+        UpdateCategoryRequest request);
 
     Task<bool> DeleteAsync(int id);
 }

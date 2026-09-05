@@ -44,9 +44,6 @@ public class InventoryMovementsController : ControllerBase
 
     [HttpPost]
     [Authorize(Roles = "Admin")]
-    
-    [HttpPost]
-    [Authorize(Roles = "Admin")]
     public async Task<ActionResult<InventoryMovementResponse>> Create(
         CreateInventoryMovementRequest request)
     {

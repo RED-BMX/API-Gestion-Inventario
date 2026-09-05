@@ -1,4 +1,4 @@
-using API_Gestion_Inventario.Models;
+using API_Gestion_Inventario.DTOs.Categories;
 using API_Gestion_Inventario.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -18,7 +18,7 @@ public class CategoriesController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Category>>> GetAll()
+    public async Task<ActionResult<IEnumerable<CategoryResponse>>> GetAll()
     {
         var categories = await _categoryService.GetAllAsync();
 
@@ -26,7 +26,7 @@ public class CategoriesController : ControllerBase
     }
 
     [HttpGet("{id:int}")]
-    public async Task<ActionResult<Category>> GetById(int id)
+    public async Task<ActionResult<CategoryResponse>> GetById(int id)
     {
         var category = await _categoryService.GetByIdAsync(id);
 
@@ -43,12 +43,13 @@ public class CategoriesController : ControllerBase
 
     [HttpPost]
     [Authorize(Roles = "Admin")]
-    public async Task<ActionResult<Category>> Create(Category category)
+    public async Task<ActionResult<CategoryResponse>> Create(
+        CreateCategoryRequest request)
     {
         try
         {
             var createdCategory =
-                await _categoryService.CreateAsync(category);
+                await _categoryService.CreateAsync(request);
 
             return CreatedAtAction(
                 nameof(GetById),
@@ -66,14 +67,14 @@ public class CategoriesController : ControllerBase
 
     [HttpPut("{id:int}")]
     [Authorize(Roles = "Admin")]
-    public async Task<ActionResult<Category>> Update(
+    public async Task<ActionResult<CategoryResponse>> Update(
         int id,
-        Category category)
+        UpdateCategoryRequest request)
     {
         try
         {
             var updatedCategory =
-                await _categoryService.UpdateAsync(id, category);
+                await _categoryService.UpdateAsync(id, request);
 
             if (updatedCategory is null)
             {
