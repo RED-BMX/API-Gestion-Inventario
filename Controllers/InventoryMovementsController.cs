@@ -44,25 +44,18 @@ public class InventoryMovementsController : ControllerBase
 
     [HttpPost]
     [Authorize(Roles = "Admin")]
+    
+    [HttpPost]
+    [Authorize(Roles = "Admin")]
     public async Task<ActionResult<InventoryMovementResponse>> Create(
         CreateInventoryMovementRequest request)
     {
-        try
-        {
-            var movement =
-                await _movementService.CreateAsync(request);
-
-            return CreatedAtAction(
-                nameof(GetById),
-                new { id = movement.Id },
-                movement);
-        }
-        catch (InvalidOperationException ex)
-        {
-            return BadRequest(new
-            {
-                message = ex.Message
-            });
-        }
+        var movement =
+            await _movementService.CreateAsync(request);
+    
+        return CreatedAtAction(
+            nameof(GetById),
+            new { id = movement.Id },
+            movement);
     }
 }

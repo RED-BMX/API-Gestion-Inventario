@@ -7,10 +7,9 @@ using API_Gestion_Inventario.Services;
 using API_Gestion_Inventario.Services.Interfaces;
 using API_Gestion_Inventario.Repositories;
 using API_Gestion_Inventario.Repositories.Interfaces;
+using API_Gestion_Inventario.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
-
-builder.Services.AddControllers();
 
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
@@ -104,6 +103,9 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
+
+app.UseMiddleware<ExceptionHandlingMiddleware>();
+
 app.UseAuthorization();
 
 app.MapControllers();
