@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using System.Reflection;
 using API_Gestion_Inventario.Services;
 using API_Gestion_Inventario.Services.Interfaces;
 using API_Gestion_Inventario.Repositories;
@@ -61,6 +62,19 @@ builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddSwaggerGen(options =>
 {
+    options.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
+    {
+        Title = "API Gestión de Inventario",
+        Version = "v1",
+        Description = "REST API para la gestión de productos, categorías y movimientos de inventario, con autenticación JWT y autorización basada en roles."
+    });
+    
+    var xmlFilename =
+        $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    
+    options.IncludeXmlComments(
+        Path.Combine(AppContext.BaseDirectory, xmlFilename));
+
     options.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
     {
         Name = "Authorization",

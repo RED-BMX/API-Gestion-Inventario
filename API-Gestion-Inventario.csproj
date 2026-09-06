@@ -6,6 +6,9 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>API_Gestion_Inventario</RootNamespace>
     <UserSecretsId>f4dc0a96-1117-46fd-9633-8dd8a59e2145</UserSecretsId>
+
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);1591</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
