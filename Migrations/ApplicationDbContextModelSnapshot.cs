@@ -47,7 +47,7 @@ namespace API_Gestion_Inventario.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("Categories");
+                    b.ToTable("Categories", (string)null);
                 });
 
             modelBuilder.Entity("API_Gestion_Inventario.Models.InventoryMovement", b =>
@@ -79,7 +79,7 @@ namespace API_Gestion_Inventario.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("InventoryMovements", t =>
+                    b.ToTable("InventoryMovements", null, t =>
                         {
                             t.HasCheckConstraint("CK_InventoryMovement_Quantity", "\"Quantity\" > 0");
                         });
@@ -125,7 +125,7 @@ namespace API_Gestion_Inventario.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("Products", t =>
+                    b.ToTable("Products", null, t =>
                         {
                             t.HasCheckConstraint("CK_Product_MinimumStock", "\"MinimumStock\" >= 0");
 
@@ -153,19 +153,7 @@ namespace API_Gestion_Inventario.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("Roles");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Name = "Admin"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Name = "User"
-                        });
+                    b.ToTable("Roles", (string)null);
                 });
 
             modelBuilder.Entity("API_Gestion_Inventario.Models.User", b =>
@@ -207,7 +195,7 @@ namespace API_Gestion_Inventario.Migrations
                     b.HasIndex("Username")
                         .IsUnique();
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("API_Gestion_Inventario.Models.InventoryMovement", b =>
