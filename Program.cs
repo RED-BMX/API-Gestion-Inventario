@@ -68,7 +68,7 @@ builder.Services.AddSwaggerGen(options =>
         Version = "v1",
         Description = "REST API para la gestión de productos, categorías y movimientos de inventario, con autenticación JWT y autorización basada en roles."
     });
-    
+
     var xmlFilename =
         $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
     
@@ -124,5 +124,13 @@ app.UseAuthorization();
 
 app.MapControllers();
 
+if (app.Environment.IsDevelopment())
+{
+    using var scope = app.Services.CreateScope();
+
+    var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+
+    db.Database.Migrate();
+}
 
 app.Run();

@@ -1,0 +1,13 @@
+bin/
+obj/
+.vs/
+.idea/
+.git/
+.gitignore
+*.user
+*.suo
+secrets.json
+appsettings.Local.json
+.env
+.env.*
+!.env.example

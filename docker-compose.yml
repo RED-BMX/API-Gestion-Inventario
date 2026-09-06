@@ -1,0 +1,35 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: inventory-postgres
+    environment:
+      POSTGRES_DB: inventory_db
+      POSTGRES_USER: inventory_app
+      POSTGRES_PASSWORD: inventory_password
+    volumes:
+      - inventory_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U inventory_app -d inventory_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: api-gestion-inventario
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__DefaultConnection: "Host=postgres;Port=5432;Database=inventory_db;Username=inventory_app;Password=inventory_password"
+      Jwt__Key: "development-only-jwt-key-change-this-before-production"
+      Jwt__Issuer: "API-Gestion-Inventario"
+      Jwt__Audience: "API-Gestion-Inventario-Client"
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+volumes:
+  inventory_postgres_data:

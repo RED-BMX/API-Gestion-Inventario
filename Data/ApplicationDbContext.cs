@@ -101,6 +101,19 @@ public class ApplicationDbContext : DbContext
             .HasIndex(r => r.Name)
             .IsUnique();
         
+        modelBuilder.Entity<Role>().HasData(
+            new Role
+            {
+                Id = 1,
+                Name = "Admin"
+            },
+            new Role
+            {
+                Id = 2,
+                Name = "User"
+            }
+        );
+        
         // Configuración de nombres únicos
         modelBuilder.Entity<Category>()
             .HasIndex(c => c.Name)
